@@ -10,9 +10,22 @@
 		3EECF9EB2FA10DE4008EB992 /* klavko.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = klavko.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		3EECFA022FA11810008EB992 /* Exceptions for "klavko" folder in "klavko" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 3EECF9EA2FA10DE4008EB992 /* klavko */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		3EECF9ED2FA10DE4008EB992 /* klavko */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				3EECFA022FA11810008EB992 /* Exceptions for "klavko" folder in "klavko" target */,
+			);
 			path = klavko;
 			sourceTree = "<group>";
 		};
@@ -85,7 +98,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 3EECF9E62FA10DE4008EB992 /* Build configuration list for PBXProject "klavko" */;
+			buildConfigurationList = 3EECF9E62FA10DE4008EB992 /* Build configuration list for PBXProject " " */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -251,10 +264,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				ENABLE_APP_SANDBOX = YES;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = klavko/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -281,10 +294,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				ENABLE_APP_SANDBOX = YES;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = klavko/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -306,7 +319,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		3EECF9E62FA10DE4008EB992 /* Build configuration list for PBXProject "klavko" */ = {
+		3EECF9E62FA10DE4008EB992 /* Build configuration list for PBXProject " " */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3EECF9F42FA10DE5008EB992 /* Debug */,
