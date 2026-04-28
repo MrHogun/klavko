@@ -83,16 +83,6 @@
         }
       }
     },
-    "Записую..." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recording..."
-          }
-        }
-      }
-    },
     "Запускати при вході в систему" : {
       "localizations" : {
         "en" : {
@@ -109,26 +99,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sound feedback on conversion"
-          }
-        }
-      }
-    },
-    "Змінити" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Change"
-          }
-        }
-      }
-    },
-    "Комбінація" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Shortcut"
           }
         }
       }
@@ -249,16 +219,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Double Shift (⇧⇧)"
-          }
-        }
-      }
-    },
-    "Поточний хоткей" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Current hotkey"
           }
         }
       }
