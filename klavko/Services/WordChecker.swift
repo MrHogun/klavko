@@ -22,7 +22,11 @@ final class WordChecker {
                "ej", "аж", "бо", "ба", "чи", "же", "мо", "по"],
     ]
 
-    private static let cyrillicChars = CharacterSet(charactersIn: "{0400}"..."{052F}")
+    private static let cyrillicChars: CharacterSet = {
+        var cs = CharacterSet()
+        cs.insert(charactersIn: Unicode.Scalar(0x0400)!...Unicode.Scalar(0x052F)!)
+        return cs
+    }()
     private static let latinChars = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
     private static let cyrillicLanguages = Set(["uk", "ru", "be", "bg", "sr", "mk"])
 
