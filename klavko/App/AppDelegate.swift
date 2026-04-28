@@ -74,12 +74,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     // MARK: - Settings window
 
     @objc private func openSettings() {
-        // Switch to regular policy so the window can become key and receive keyboard events
         NSApp.setActivationPolicy(.regular)
 
         if let win = settingsWindow {
-            win.makeKeyAndOrderFront(nil)
-            NSApp.activate(ignoringOtherApps: true)
+            // Small delay for WindowServer to register the policy change
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                win.makeKeyAndOrderFront(nil)
+                NSApp.activate(ignoringOtherApps: true)
+            }
             observeSettingsClose(win)
             return
         }
@@ -88,8 +90,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         win.styleMask = [.titled, .closable]
         win.center()
         win.isReleasedWhenClosed = false
-        win.makeKeyAndOrderFront(nil)
-        NSApp.activate(ignoringOtherApps: true)
+        // Delay needed on first open — Dock must initialize before window can become key
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            win.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+        }
         settingsWindow = win
         observeSettingsClose(win)
     }
@@ -100,7 +105,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             object: win,
             queue: .main
         ) { [weak self] _ in
-            // Return to accessory policy when settings window closes
             NSApp.setActivationPolicy(.accessory)
             self?.settingsWindow = nil
         }
