@@ -74,9 +74,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     // MARK: - Settings window
 
     @objc private func openSettings() {
+        // Switch to regular policy so the window can become key and receive keyboard events
+        NSApp.setActivationPolicy(.regular)
+
         if let win = settingsWindow {
             win.makeKeyAndOrderFront(nil)
             NSApp.activate(ignoringOtherApps: true)
+            observeSettingsClose(win)
             return
         }
         let win = NSWindow(contentViewController: NSHostingController(rootView: SettingsView()))
@@ -87,6 +91,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         win.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
         settingsWindow = win
+        observeSettingsClose(win)
+    }
+
+    private func observeSettingsClose(_ win: NSWindow) {
+        NotificationCenter.default.addObserver(
+            forName: NSWindow.willCloseNotification,
+            object: win,
+            queue: .main
+        ) { [weak self] _ in
+            // Return to accessory policy when settings window closes
+            NSApp.setActivationPolicy(.accessory)
+            self?.settingsWindow = nil
+        }
     }
 
     @objc private func performConversion() {
