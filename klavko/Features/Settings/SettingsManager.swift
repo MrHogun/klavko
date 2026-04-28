@@ -5,28 +5,6 @@ import Carbon
 import Combine
 import ServiceManagement
 
-enum ConversionDirection: Int, CaseIterable, Codable {
-    case both = 0       // EN↔UA (обидві сторони)
-    case toUkrainian = 1 // тільки EN→UA
-    case toEnglish = 2   // тільки UA→EN
-
-    var displayName: String {
-        switch self {
-        case .both: return String(localized: "Обидві сторони (EN↔UA)")
-        case .toUkrainian: return String(localized: "Тільки EN → UA")
-        case .toEnglish: return String(localized: "Тільки UA → EN")
-        }
-    }
-}
-
-struct ConversionLogEntry: Identifiable, Codable {
-    let id: UUID
-    let date: Date
-    let original: String
-    let converted: String
-    let mode: String // "auto" or "manual"
-}
-
 final class SettingsManager: ObservableObject {
 
     static let shared = SettingsManager()
@@ -34,6 +12,7 @@ final class SettingsManager: ObservableObject {
     private let defaults = UserDefaults.standard
 
     // MARK: - Keys
+
     private enum Keys {
         static let useDoubleShift = "useDoubleShift"
         static let hotkeyKeyCode = "hotkeyKeyCode"
@@ -124,10 +103,10 @@ final class SettingsManager: ObservableObject {
         if useDoubleShift { return "⇧⇧" }
         var parts: [String] = []
         let mods = CGEventFlags(rawValue: hotkeyModifiers)
-        if mods.contains(.maskControl) { parts.append("⌃") }
+        if mods.contains(.maskControl)   { parts.append("⌃") }
         if mods.contains(.maskAlternate) { parts.append("⌥") }
-        if mods.contains(.maskShift) { parts.append("⇧") }
-        if mods.contains(.maskCommand) { parts.append("⌘") }
+        if mods.contains(.maskShift)     { parts.append("⇧") }
+        if mods.contains(.maskCommand)   { parts.append("⌘") }
         if let char = keyCodeToString(hotkeyKeyCode) { parts.append(char) }
         return parts.joined()
     }
