@@ -24,7 +24,8 @@ final class ConversionHandler {
         let appElement = AXUIElementCreateApplication(app.processIdentifier)
         var focusedRef: CFTypeRef?
         guard AXUIElementCopyAttributeValue(appElement, kAXFocusedUIElementAttribute as CFString, &focusedRef) == .success,
-              let element = focusedRef as? AXUIElement else { return nil }
+              let focusedValue = focusedRef else { return nil }
+        let element = unsafeBitCast(focusedValue, to: AXUIElement.self)
         var selectedRef: CFTypeRef?
         guard AXUIElementCopyAttributeValue(element, kAXSelectedTextAttribute as CFString, &selectedRef) == .success,
               let text = selectedRef as? String, !text.isEmpty else { return nil }
@@ -39,7 +40,8 @@ final class ConversionHandler {
         let appElement = AXUIElementCreateApplication(app.processIdentifier)
         var focusedRef: CFTypeRef?
         guard AXUIElementCopyAttributeValue(appElement, kAXFocusedUIElementAttribute as CFString, &focusedRef) == .success,
-              let element = focusedRef as? AXUIElement else { return }
+              let focusedValue = focusedRef else { return }
+        let element = unsafeBitCast(focusedValue, to: AXUIElement.self)
 
         let result = AXUIElementSetAttributeValue(element, kAXSelectedTextAttribute as CFString, converted as CFString)
         var verifyRef: CFTypeRef?
