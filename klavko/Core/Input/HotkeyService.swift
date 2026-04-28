@@ -2,9 +2,11 @@
 
 import Carbon
 import Cocoa
+import KeyboardShortcuts
 
-/// Detects hotkey press via CGEvent tap.
-/// Supports double-Shift or custom modifier+key combination.
+/// Listens for the configured hotkey and calls `onHotkey`.
+/// - Double-shift mode: detected via CGEvent tap (KeyboardShortcuts doesn't support double-tap).
+/// - Custom shortcut mode: delegated to KeyboardShortcuts library.
 final class HotkeyService {
 
     var onHotkey: (() -> Void)?
@@ -13,29 +15,22 @@ final class HotkeyService {
     private var boxPointer: UnsafeMutableRawPointer?
     private var lastShiftTime: TimeInterval = 0
     private let doublePressInterval: TimeInterval = 0.4
-
     private let leftShiftKeyCode: CGKeyCode = 56
     private let rightShiftKeyCode: CGKeyCode = 60
 
     func start() {
         stop()
-        let settings = SettingsManager.shared
-
-        if settings.useDoubleShift {
+        if SettingsManager.shared.useDoubleShift {
             startDoubleShiftTap()
         } else {
-            startCustomKeyTap(keyCode: settings.hotkeyKeyCode, modifiers: CGEventFlags(rawValue: settings.hotkeyModifiers))
+            KeyboardShortcuts.onKeyDown(for: .convertText) { [weak self] in
+                self?.onHotkey?()
+            }
         }
-
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(hotkeySettingsChanged),
-            name: .hotkeySettingsChanged,
-            object: nil
-        )
     }
 
     func stop() {
+        // Stop CGEvent tap
         if let tap = eventTap {
             CGEvent.tapEnable(tap: tap, enable: false)
             eventTap = nil
@@ -44,13 +39,11 @@ final class HotkeyService {
             Unmanaged<Box<(CGEvent) -> Void>>.fromOpaque(ptr).release()
             boxPointer = nil
         }
+        // Stop KeyboardShortcuts listener
+        KeyboardShortcuts.disable(.convertText)
     }
 
-    @objc private func hotkeySettingsChanged() {
-        start()
-    }
-
-    // MARK: - Double Shift
+    // MARK: - Double Shift (CGEvent tap)
 
     private func startDoubleShiftTap() {
         let mask: CGEventMask = (1 << CGEventType.flagsChanged.rawValue)
@@ -73,25 +66,9 @@ final class HotkeyService {
         }
     }
 
-    // MARK: - Custom key
-
-    private func startCustomKeyTap(keyCode: CGKeyCode, modifiers: CGEventFlags) {
-        let mask: CGEventMask = (1 << CGEventType.keyDown.rawValue)
-        createTap(mask: mask) { [weak self] event in
-            let code = CGKeyCode(event.getIntegerValueField(.keyboardEventKeycode))
-            let relevantMods: CGEventFlags = [.maskCommand, .maskAlternate, .maskControl, .maskShift]
-            let flags = event.flags.intersection(relevantMods)
-            let expectedMods = modifiers.intersection(relevantMods)
-            if code == keyCode && flags == expectedMods {
-                DispatchQueue.main.async { self?.onHotkey?() }
-            }
-        }
-    }
-
-    // MARK: - Tap helper
+    // MARK: - CGEvent tap helper
 
     private func createTap(mask: CGEventMask, handler: @escaping (CGEvent) -> Void) {
-        // Use a box to pass the closure through UnsafeMutableRawPointer
         let box = Box(handler)
         let ptr = Unmanaged.passRetained(box).toOpaque()
         boxPointer = ptr

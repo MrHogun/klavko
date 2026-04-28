@@ -1,34 +1,26 @@
 // Copyright (c) 2026 MrHogun. Licensed under the MIT License.
 
 import SwiftUI
+import KeyboardShortcuts
 
 struct HotkeyTab: View {
     @ObservedObject var settings: SettingsManager
 
     var body: some View {
         Form {
-            Section(String(localized: "Поточний хоткей")) {
-                HStack {
-                    Text(String(localized: "Комбінація"))
-                    Spacer()
-                    Text(settings.hotkeyDescription)
-                        .font(.system(.title2, design: .rounded))
-                        .bold()
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 6)
-                        .background(Color.accentColor.opacity(0.1))
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                }
-            }
-
             Section(String(localized: "Тип хоткею")) {
                 Toggle(String(localized: "Подвійний Shift (⇧⇧)"), isOn: $settings.useDoubleShift)
                     .onChange(of: settings.useDoubleShift) {
                         NotificationCenter.default.post(name: .hotkeySettingsChanged, object: nil)
                     }
+            }
 
-                if !settings.useDoubleShift {
-                    HotkeyRecorderRow(settings: settings)
+            if !settings.useDoubleShift {
+                Section(String(localized: "Комбінація")) {
+                    KeyboardShortcuts.Recorder(String(localized: "Натисни нову комбінацію"), name: .convertText)
+                        .onChange(of: KeyboardShortcuts.getShortcut(for: .convertText)) {
+                            NotificationCenter.default.post(name: .hotkeySettingsChanged, object: nil)
+                        }
                 }
             }
         }
